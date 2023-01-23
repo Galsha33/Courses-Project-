@@ -10,24 +10,17 @@ const pool = new Pool({
     port: 5432,
 });
 
-/**
- * Add new user :
-this function must receive a user object and includes a name password and email
-you should hash the password before saving it
-using insert statement in SQL add a new user and return the user
-if there are errors return an empty user = null
-*/
 const createUser = (req, res) => {
-    var fullname = req.body.fullName;
-    var email = req.body.email;
-    var password = req.body.password;
+    const fullname = req.body.fullName;
+    const email = req.body.email;
+    const password = req.body.password;
 
     const saltRounds = 10
 
     bcrypt
         .hash(password, saltRounds)
         .then(hash => {
-            var user = {
+            const user = {
                 'name': fullname,
                 email,
                 'password': hash
@@ -52,8 +45,7 @@ const createUser = (req, res) => {
 
 };
 
-// Get user by email
-// this function receives an email as an argument and returns a user object
+
 const getUserById = async(id) => {
     return await pool.query("SELECT * FROM users WHERE user_id = $1", [id], (error, results) => {
         if (error) {
@@ -63,8 +55,7 @@ const getUserById = async(id) => {
     });
 };
 
-// Get user by id
-// this function receives an id as an argument and returns a user object
+
 const getUserByEmail = async(email) => {
     return new Promise(function(resolve, reject) {
         pool.query("SELECT * FROM users WHERE email = $1", [email], (err, result) => {
@@ -85,13 +76,7 @@ const getUserEnrollment = async(id) => {
     });
 };
 
-// Sign up for a course
-// this function adds a new row to the courses table
-// each course must have exactly 22 students in the same course (id and name)
-// else add a new row with a new course name and a new course id
-// the function receives a userid and subject name
-// write an SQL statement to locate the subject id from the subject table and
-// add a new row based on the id that you received from the statement
+
 const signUpForACourse = async(userid, subjectName) => {
     await pool.query(
         "SELECT FROM subjects WHERE subject = $1", [subjectName],
@@ -99,7 +84,7 @@ const signUpForACourse = async(userid, subjectName) => {
             if (error) {
                 throw error;
             }
-            var subjectId = results.rows[0].id;
+            const subjectId = results.rows[0].id;
 
             pool.query("SELECT * FROM courses where subject_id = $1", [subjectId], (err, studentCount) => {
                 if (error) {
@@ -130,11 +115,7 @@ const signUpForACourse = async(userid, subjectName) => {
     );
 };
 
-// Delete user course
-// the function receives a userid and subject name
-// write an SQL statement to locate the subject id from the subject table and
-// delete the row from the subject table using the delete statement
-//  */
+
 const deleteSubject = async(userid, subjectname) => {
     pool.query(
         "SELECT FROM subjects WHERE name = $1", [subjectname],
@@ -142,7 +123,7 @@ const deleteSubject = async(userid, subjectname) => {
             if (error) {
                 throw error;
             }
-            var subjectId = results.rows[0].id;
+            const subjectId = results.rows[0].id;
             pool.query(
                 "DELETE FROM courses WHERE user_id = $1 and subject_id = $2", [userid, subjectId],
                 (error, results) => {

@@ -1,6 +1,6 @@
-var express = require('express');
-var db = require("../db/db_connector")
-var router = express.Router();
+const express = require('express');
+const db = require("../db/db_connector")
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get("/subjects", (req, res) => {
-    var user_id = req.query.id;
+    const user_id = req.query.id;
 
     db.getUserEnrollment(user_id)
         .then((userEnrollment) => {
@@ -25,8 +25,8 @@ router.get("/subjects", (req, res) => {
 });
 
 router.post("/enrollemnt", (req, res) => {
-    var userid = req.body.userid;
-    var subjectName = req.body.subjectName;
+    const userid = req.body.userid;
+    const subjectName = req.body.subjectName;
     db.signUpForACourse(userid, subjectName).then(enrollment => {
         res.send({ enrollment })
     })

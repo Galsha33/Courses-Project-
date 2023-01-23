@@ -1,12 +1,12 @@
-var express = require("express");
+const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-var db = require("../db/db_connector");
-var router = express.Router();
+const db = require("../db/db_connector");
+const router = express.Router();
 
 router.post("/login", (req, res) => {
-    var email = req.body.email;
-    var password = req.body.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     db.getUserByEmail(email)
         .then((user) => {
@@ -17,7 +17,7 @@ router.post("/login", (req, res) => {
                 .compare(password, user.password)
                 .then((isCorrectPassword) => {
                     if (isCorrectPassword) {
-                        var token = jwt.sign(email, "courses");
+                        const token = jwt.sign(email, "courses");
                         res.status(200).send({ user, token });
                     }
                 })
